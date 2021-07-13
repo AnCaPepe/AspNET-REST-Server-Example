@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace school_server.Models
 {
     public class Course
@@ -7,5 +9,6 @@ namespace school_server.Models
         public int ProfessorId { get; set; }
         
         public Professor Professor { get; set; }
+        public List<CourseStudent> CourseStudents { get; set; }
     }
 }

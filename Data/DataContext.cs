@@ -5,7 +5,7 @@ using school_server.Models;
 
 namespace school_server.Data
 {
-    class DataContext : DbContext
+    public class DataContext : DbContext
     {
         public DataContext( DbContextOptions<DataContext> options )
             : base( options )
@@ -19,7 +19,7 @@ namespace school_server.Data
 
         protected override void OnModelCreating( ModelBuilder modelBuilder )
         {
-            modelBuilder.Entity<CourseStudent>().HasNoKey();
+            modelBuilder.Entity<CourseStudent>().HasKey( entity => new { entity.CourseId, entity.StudentId } );
 
             modelBuilder.Entity<Student>().HasData(
                 new List<Student>() {
@@ -39,13 +39,13 @@ namespace school_server.Data
                     new Course() { Id = 2, Name = "Controle", ProfessorId = 1 }
                 }
             );
-            // modelBuilder.Entity<CourseStudent>().HasData(
-            //     new List<CourseStudent>() {
-            //         new CourseStudent() { CourseId = 1, StudentId = 1 },
-            //         new CourseStudent() { CourseId = 1, StudentId = 2 },
-            //         new CourseStudent() { CourseId = 2, StudentId = 1 }
-            //     }
-            // );
+            modelBuilder.Entity<CourseStudent>().HasData(
+                new List<CourseStudent>() {
+                    new CourseStudent() { CourseId = 1, StudentId = 1 },
+                    new CourseStudent() { CourseId = 1, StudentId = 2 },
+                    new CourseStudent() { CourseId = 2, StudentId = 1 }
+                }
+            );
         }
     }
 }

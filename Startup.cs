@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -38,6 +40,14 @@ namespace school_server
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "school_server", Version = "v1" });
             });
+            services.AddCors();
+            
+            services.AddMvc().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve );
+
+            services.AddScoped<IChangesRepository, ChangesRepository>();
+            services.AddScoped<IStudentsRepository, StudentsRepository>();
+            services.AddScoped<IProfessorsRepository, ProfessorsRepository>();
+            services.AddScoped<ICoursesRepository, CoursesRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +70,8 @@ namespace school_server
             {
                 endpoints.MapControllers();
             });
+
+            app.UseCors( x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader() );
         }
     }
 }
