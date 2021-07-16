@@ -64,14 +64,14 @@ namespace school_server
 
             app.UseRouting();
 
+            app.UseCors( x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader() );
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
-            app.UseCors( x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader() );
         }
     }
 }

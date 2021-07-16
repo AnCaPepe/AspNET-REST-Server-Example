@@ -14,11 +14,12 @@ namespace school_server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Produces("application/json")]
     public class CoursesController : ControllerBase
     {
-        private readonly IRetrievesRepository<Course> _retrievesRepository;
+        private readonly ICoursesRepository _retrievesRepository;
         private readonly IChangesRepository _changesRepository;
-        public CoursesController( IRetrievesRepository<Course> retrievesRepository, IChangesRepository changesRepository )
+        public CoursesController( ICoursesRepository retrievesRepository, IChangesRepository changesRepository )
         {
             _retrievesRepository = retrievesRepository;
             _changesRepository = changesRepository;
@@ -43,13 +44,14 @@ namespace school_server.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get( [FromQuery] int id )
+        [Route("{id}")]
+        public async Task<IActionResult> Get( int id )
         {
             try
             {
-                Course entity = await _retrievesRepository.RetrieveDetailed( id );
+                dynamic entity = await _retrievesRepository.RetrieveDetailed( id );
 
-                if( entity != null ) return NotFound();
+                if( entity == null ) return NotFound();
                 
                 return Ok( entity );
             }
@@ -94,7 +96,7 @@ namespace school_server.Controllers
         {
             try
             {
-                if( await _retrievesRepository.Retrieve( entity.Id ) != null ) 
+                if( await _retrievesRepository.Retrieve( entity.Id ) == null ) 
                     return NotFound();
                 
                 _changesRepository.Update( entity );
@@ -125,7 +127,7 @@ namespace school_server.Controllers
             {
                 Course entity = await _retrievesRepository.Retrieve( id );
 
-                if( entity != null ) return NotFound();
+                if( entity == null ) return NotFound();
                 
                 _changesRepository.Delete( entity );
 

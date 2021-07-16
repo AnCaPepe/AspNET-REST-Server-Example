@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Dynamic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,16 +29,27 @@ namespace school_server.Data
 
         }
 
-        public async Task<Professor> RetrieveDetailed( int id )
+        public async Task<dynamic> RetrieveDetailed( int id )
         {
             Professor result = await Retrieve( id );
-
+            
             if( result != null )
             {
-                result.Courses = await _context.Courses.Where( x => x.ProfessorId == result.Id ).ToListAsync();
+                dynamic professor = new ExpandoObject();
+                professor.id = result.Id;
+                professor.name = result.Name;
+                professor.age = result.Age;
+                professor.courses = new List<dynamic>();
+
+                Course[] courses = await _context.Courses.Where( x => x.ProfessorId == result.Id ).ToArrayAsync();
+                
+                foreach( Course course in courses )
+                    professor.courses.Add( new { id = course.Id, name = course.Name } );
+                
+                return professor;
             }
 
-            return result;
+            return null;
         }
     }
 }

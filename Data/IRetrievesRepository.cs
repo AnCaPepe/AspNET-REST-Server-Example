@@ -9,6 +9,6 @@ namespace school_server.Data
     {
         Task<T[]> RetrieveAll();
         Task<T> Retrieve( int id );
-        Task<T> RetrieveDetailed( int id );
+        Task<dynamic> RetrieveDetailed( int id );
     }
 }
